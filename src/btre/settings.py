@@ -20,7 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*uy$*b%%)r61$of5t*8n10e_w2gr7!+v8!qqwe)w*tpnbb#1ya'
+SECRET_KEY = os.getenv('SECRET_KEY')
+NAME = os.getenv('NAME')
+HOST = os.getenv('HOST')
+USER = os.getenv('USER')
+PORT = os.getenv('PORT')
+PASSWORD = os.getenv('PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,8 +83,12 @@ WSGI_APPLICATION = 'btre.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': NAME,
+        'HOST': HOST,
+        'USER': USER,
+        'PORT': PORT,
+        'PASSWORD':PASSWORD,
     }
 }
 
