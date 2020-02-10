@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Listing
+from .choices import bedroom_choices, price_choices, county_choices 
 
 def listings(request):
     template = 'listings/listings.html'
@@ -29,7 +30,49 @@ def listing(request, id):
 
 
 def search(request):
+  
+    queryset_list = Listing.objects.order_by('-list_date')
+    # keywords
+    if "keywords" in request.GET:
+        keywords = request.GET['keywords']
+        if keywords:
+            queryset_list = queryset_list.filter(description__icontains=keywords)
+
+     # city
+    if "city" in request.GET:
+        city = request.GET['city']
+        if city:
+            queryset_list = queryset_list.filter(city__iexact=city)
+
+      # county
+    if "county" in request.GET:
+        county = request.GET['county']
+        if county:
+            queryset_list = queryset_list.filter(county__iexact=county) 
+
+      # bedrooms
+    if "bedrooms" in request.GET:
+        bedrooms = request.GET['bedrooms']
+        if bedrooms:
+            queryset_list = queryset_list.filter(bedrooms__lte=bedrooms)
+
+     # price
+    if "price" in request.GET:
+        price = request.GET['price']
+        if price:
+            queryset_list = queryset_list.filter(price__lte=price)                                   
+
 
     template = 'listings/search.html'
-    return render(request, template)
+    context = {
+         "counties": county_choices,
+         "pricies" : price_choices,
+         "bedrooms": bedroom_choices,
+         "listings": queryset_list,
+         "values"  : request.GET
+
+    }
+
+
+    return render(request, template, context)
    
